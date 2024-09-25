@@ -5,99 +5,38 @@
     <title>Fashify</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="firebase.js" type="module" defer></script>
-    <script src="app.js" type="module" defer></script>
 </head>
 
 <body>
-    <section class="ui segment loading" id="main-view">
-
-        <div class="ui segment big" id="user-profile">
-
-            <div class="ui card">
-                <div class="content">
-                    <div class="header">User Profile</div>
-                    <div class="meta" id="user-email">
-                        someemail@gmail.com
-                    </div>
-
-                </div>
-                <div class="extra content">
-                    <button class="ui button red tiny" id="logout-btn">Log out</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- SIGN IN FROM -->
-        <div class="ui segment grey" id="login-form">
-            <form class="ui big form ">
-                <div class="ui stacked segment">
-                    <div class="ui error message big" id="login-error-message"></div>
-                    <!-- EMAIL -->
-                    <div class="field">
-                        <div class="ui left icon input big">
-                            <i class="mail icon"></i>
-                            <input type="email" placeholder="Email" id="login-email" />
-                        </div>
-                    </div>
-
-                    <!-- PASSWORD -->
-                    <div class="field">
-                        <div class="ui left icon input big ">
-                            <i class="lock icon"></i>
-                            <input type="password" placeholder="Password" id="login-password" />
-                        </div>
-                    </div>
-                    <button class="ui button blue fluid big" id="login-btn">LOG IN</button>
-                </div>
+    <div id="auth_container">
+        <div>
+            <h2>Register</h2>
+            <form>
+                <label for="email">Email</label><br>
+                <input type="email" name="email" id="signup_email"><br>
+                <label for="password">Password</label><br>
+                <input type="password" name="password" id="signup_password"><br>
+                <button id="signup_btn" type="button">Register</button>
             </form>
-            <div class="ui message small big">Need an account? <a id="need-an-account-btn">Sign up</a></div>
         </div>
-
-        </div>
-
-
-        <div class="ui segment grey signup-form" id="signup-form">
-
-            <form class="ui form big">
-                <div class="ui stacked segment">
-
-                    <div class="ui error message" id="error-message">
-                    </div>
-
-                    <!-- EMAIL -->
-                    <div class="field">
-                        <div class="ui left icon input big">
-                            <i class="mail icon"></i>
-                            <input type="email" placeholder="Email" id="email" />
-                        </div>
-                    </div>
-
-                    <!-- PASSWORD -->
-                    <div class="field">
-                        <div class="ui left icon input big">
-                            <i class="lock icon"></i>
-                            <input type="password" placeholder="Password" id="password" />
-                        </div>
-                    </div>
-                    <button class="ui button green fluid big" id="signup-btn">CREATE ACCOUT</button>
-                </div>
+        <div>
+            <h2>Log in</h2>
+            <form>
+                <label for="email">Email</label><br>
+                <input type="email" name="email" id="signin_email"><br>
+                <label for="password">Password</label><br>
+                <input type="password" name="password" id="signin_password"><br>
+                <button id="signin_btn" type="button">Log in</button>
             </form>
-
-            <div class="ui message small big">Already have an account? <a id="have-an-account-btn">Log In</a></div>
         </div>
+    </div>
 
-
-
-    </section>
-
-
-
-
-
-
-
-    
+    <div id="user_container">
+        <h1>Home page</h1>
+        <p id="user_email"></p>
+        <button type="button" id="logout_btn">Logout</button>
+    </div>
+    <script src="app.js" type="module"></script>
 </body>
 
 </html>

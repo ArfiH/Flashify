@@ -1,133 +1,107 @@
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  signInWithEmailAndPassword,
-} from "https://www.gstatic.com/firebasejs/10.13.12/firebase-auth.js";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getAuth,
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
-const auth = getAuth();
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDNbB981Mfdv-rMWExTzLfudOGOTt3A4kI",
+  authDomain: "forflashify.firebaseapp.com",
+  projectId: "forflashify",
+  storageBucket: "forflashify.appspot.com",
+  messagingSenderId: "383183997845",
+  appId: "1:383183997845:web:09ff8b07fb39a8853c049c"
+};
 
-const mainView = document.getElementById("main-view");
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+// Initialize Firebase auth and get a reference to the service
+const auth = getAuth(app);
 
-const logInForm = document.getElementById("login-form");
-const loginEmail = document.getElementById("login-email");
-const loginPassword = document.getElementById("login-password");
-const loginBtn = document.getElementById("login-btn");
-const loginErrorMessage = document.getElementById("login-error-message");
-const needAnAccountBtn = document.getElementById("need-an-account-btn");
-
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const signUpBtn = document.getElementById("signup-btn");
-const UIErrorMessage = document.getElementById("error-message");
-const signUpFormView = document.getElementById("signup-form");
-const haveAnAccountBtn = document.getElementById("have-an-account-btn");
-
-const userProfileView = document.getElementById("user-profile");
-const UIuserEmail = document.getElementById("user-email");
-const logOutBtn = document.getElementById("logout-btn");
+const signup_email = document.getElementById("signup_email");
+const signup_password = document.getElementById("signup_password");
+const signup_btn = document.getElementById("signup_btn");
+const signin_email = document.getElementById("signin_email");
+const signin_password = document.getElementById("signin_password");
+const signin_btn = document.getElementById("signin_btn");
+signup_btn.addEventListener('click', createUserAccount);
+signin_btn.addEventListener('click', signIn);
+const auth_container = document.getElementById('auth_container');
+const user_container = document.getElementById('user_container');
+const user_email = document.getElementById('user_email');
+const logout_btn = document.getElementById('logout_btn');
+logout_btn.addEventListener('click', logout);
 
 onAuthStateChanged(auth, (user) => {
-  console.log(user);
   if (user) {
-    logInForm.style.display = "none";
-    userProfileView.style.display = "block";
-    UIuserEmail.innerHTML = user.email;
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/auth.user
+    const uid = user.uid;
+    console.log('Logged in');
+    auth_container.style.display = "none";
+    user_container.style.display = "block";
+    user_email.innerText = user.email;
+    // ...
   } else {
-    logInForm.style.display = "block";
-    userProfileView.style.display = "none";
+    auth_container.style.display = "block";
+    user_container.style.display = "none";
+    console.log('Not logged in');
+    // User is signed out
+    // ...
   }
-  mainView.classList.remove("loading");
 });
 
-const signUpButtonPressed = async (e) => {
-  e.preventDefault();
+function createUserAccount() {
+  console.log(signup_email.value);
+  console.log(signup_password.value);
 
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email.value,
-      password.value
-    );
+  createUserWithEmailAndPassword(auth, signup_email.value, signup_password.value)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    console.log('User -> ', user);
+    // ...
+  })
+  .catch((error) => {
+    console.log('Not Registered');
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorMessage);
+    // ..
+  });
+}
 
-    console.log(userCredential);
-  } catch (error) {
-    console.log(error.code);
-    UIErrorMessage.innerHTML = formatErrorMessage(error.code, "signup");
-    UIErrorMessage.classList.add("visible");
-  }
-};
+function signIn() {
+  console.log(signin_email.value);
+  console.log(signin_password.value);
 
-const logOutButtonPressed = async () => {
-  try {
-    await signOut(auth);
-    email.value = "";
-    password.value = "";
-  } catch (error) {
-    console.log(error);
-  }
-};
+  signInWithEmailAndPassword(auth, signin_email.value, signin_password.value)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log('User-> ', user);
+    // ...
+  })
+  .catch((error) => {
+    console.log('Not logged in');
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+}
 
-const loginButtonPressed = async (e) => {
-  e.preventDefault();
+function logout() {
+  signOut(auth).then(() => {
+    // Sign-out successful.
+  }).catch((error) => {
+    // An error happened.
+  });
+}
 
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      loginEmail.value,
-      loginPassword.value
-    );
-  } catch (error) {
-    console.log(error.code);
-    console.log(formatErrorMessage(error.code, "login"));
-    loginErrorMessage.innerHTML = formatErrorMessage(error.code, "login");
-    loginErrorMessage.classList.add("visible");
-  }
-};
-
-const needAnAccountButtonPressed = () => {
-  logInForm.style.display = "none";
-  signUpFormView.style.display = "block";
-};
-
-const haveAnAccountButtonPressed = () => {
-  logInForm.style.display = "block";
-  signUpFormView.style.display = "none";
-};
-
-signUpBtn.addEventListener("click", signUpButtonPressed);
-haveAnAccountBtn.addEventListener("click", haveAnAccountButtonPressed);
-logOutBtn.addEventListener("click", logOutButtonPressed);
-loginBtn.addEventListener("click", loginButtonPressed);
-needAnAccountBtn.addEventListener("click", needAnAccountButtonPressed);
-
-const formatErrorMessage = (errorCode, action) => {
-  let message = "";
-  if (action === "signup") {
-    if (
-      errorCode === "auth/invalid-email" ||
-      errorCode === "auth/missing-email"
-    ) {
-      message = "Please enter a valid email";
-    } else if (
-      errorCode === "auth/missing-password" ||
-      errorCode === "auth/weak-password"
-    ) {
-      message = "Password must be at least 6 characters long";
-    } else if (errorCode === "auth/email-already-in-use") {
-      message = "Email is already taken";
-    }
-  } else if (action === "login") {
-    if (
-      errorCode === "auth/invalid-email" ||
-      errorCode === "auth/missing-password"
-    ) {
-      message = "Email or Password is incorrect";
-    } else if (errorCode === "auth/user-not-found") {
-      message = "Our system was unable to verify your email or password";
-    }
-  }
-
-  return message;
-};
+// const db = getFirestore(app);
+// export { app }
+// export { db, collection, getDocs, Timestamp, addDoc };
+// export { query, orderBy, limit, where, onSnapshot };
